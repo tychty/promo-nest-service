@@ -3,6 +3,8 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { PromoCodesService } from './promo-codes.service';
 import { CreatePromoCodeSchema } from './dto/create-promo-code.dto';
 import type { CreatePromoCodeDto } from './dto/create-promo-code.dto';
+import { ActivatePromoCodeSchema } from './dto/activate-promo-code.dto';
+import type { ActivatePromoCodeDto } from './dto/activate-promo-code.dto';
 
 @Controller('promo-codes')
 export class PromoCodesController {
@@ -23,5 +25,14 @@ export class PromoCodesController {
   @Get(':code')
   findByCode(@Param('code') code: string) {
     return this.promoCodesService.findByCode(code);
+  }
+
+  @Post(':code/activate')
+  activate(
+    @Param('code') code: string,
+    @Body(new ZodValidationPipe(ActivatePromoCodeSchema))
+    dto: ActivatePromoCodeDto,
+  ) {
+    return this.promoCodesService.activate(code, dto);
   }
 }
